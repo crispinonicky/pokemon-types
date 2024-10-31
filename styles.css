@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    /* background-color: #f9f9f9; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.search-dropdown {
+    width: 300px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.dropdown-display {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    z-index: 1000;
+    display: none;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-input {
+    /* width: 100%; */
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 300px;
+    display: flex;
+}
+
+.dropdown-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-content ul li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-content ul li:hover {
+    background-color: #f1f1f1;
+}
+
+#dropdownList {
+    padding-top: 45px;
+}
+
+.d-none {
+    display: none;
+}
+
+.wrapper {
+    margin-top: 15px;
+}
+
+img.type {
+    width: 150px;
+}
+
+#pokemon-data .img-wrapper img {
+    height: 200px;
+}
+
+.matchups-wrapper ul {
+    list-style: none;
+    font-size: 20px;
+}
