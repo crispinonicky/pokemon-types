@@ -37,7 +37,10 @@ $(document).ready(function () {
         } else if (elem[0].innerHTML.includes("-Hisui")) {
             let dexName = elem[0].innerHTML.toLowerCase();
             imgUrl = `https://img.pokemondb.net/artwork/${dexName}an.jpg`;
-    } else {
+        } else if (elem[0].innerHTML.includes("-Galar")) {
+            let dexName = elem[0].innerHTML.toLowerCase();
+            imgUrl = `https://img.pokemondb.net/artwork/${dexName}ian.jpg`;
+        } else {
             let dexNum = elem[0].dataset.num
             if (dexNum.toString().length < 3) {
                 dexNum = dexNum.padStart(3, "0");
@@ -48,6 +51,7 @@ $(document).ready(function () {
 
         let data = JSON.parse(elem[0].dataset.info);
         console.log(data);
+        //console.log(calcMatchups("I", "D/l"));
 
         $(".type-wrapper .type-1").attr("src", `img/${data.types[0]}.png`)
         if (data.types.length == 1) {
@@ -59,8 +63,95 @@ $(document).ready(function () {
             $(".type-wrapper .type-1").addClass("d-none");
             $(".type-wrapper .type-2").addClass("d-none");
         }
+
+        let matchups = {
+            immune: [],
+            stronglyResists: [],
+            resists: [],
+            weak: [],
+            veryWeak: []
+        }
+
+        const typeRef = {
+            Bug: "B",
+            Water: "W",
+            Steel: "S",
+            Electric: "E",
+            Ice: "I",
+            Rock: "R",
+            Normal: "N",
+            Ground: "u",
+            Flying: "l",
+            Dark: "k",
+            Psychic: "c",
+            Dragon: "D",
+            Poison: "P",
+            Ghost: "o",
+            Fighting: "t",
+            Fairy: "y",
+            Fire: "e",
+            Grass: "G"
+        }
+
+        let defensiveType = [];
+        for (let i = 0; i < data.types.length; i++) {
+            defensiveType.push(typeRef[data.types[i]]);
+        }
+        defensiveType = defensiveType.join("/")
+
+        for (var [key, value] of Object.entries(typeRef)) {
+            let currMatchup = calcMatchups(value, defensiveType);
+            if (currMatchup == 0) {
+                matchups.immune.push(key);
+            } else if (currMatchup == 0.25) {
+                matchups.stronglyResists.push(key);
+            } else if (currMatchup == 0.5) {
+                matchups.resists.push(key);
+            } else if (currMatchup == 2) {
+                matchups.weak.push(key);
+            } else if (currMatchup == 4) {
+                matchups.veryWeak.push(key);
+            } 
+            // Potential to-do: add category for neutral damage
+        }
+
+        for (var key in matchups) {
+            console.log(key)
+            console.log(matchups[key])
+            let typeHtml = "";
+            if (matchups[key].length == 0) {
+                typeHtml = "None"
+            } else {
+                matchups[key].forEach(type => {
+                    typeHtml += `<img class='type' src='img/${type}.png'>`;
+                })
+            }
+            $(`.${key} span`).html(typeHtml);
+        }
+
     }
 
-    
-
+    // Type matchup logic: https://codegolf.stackexchange.com/a/55843    
+    function calcMatchups(a,b) {
+        // keys is a list of letters found in the types of attacks/defenses
+        keys = [..."BWSEIRNulkcDPotyeG"]; 
+        
+        // getIndex is a single case statement.
+        // it checks each of keys, one-by-one, falling through until we've found the proper index
+        getIndex=x=>keys.findIndex(c=>x.match(c));
+        
+        // encodedValues is a list, indexed by `keys`, where each value is 7-characters.
+        encodedValues = "kjwhcgnj2xd6elihtlneemw82duxijsazl3sh4iz5akjmlmsqds06xf1sbb8d0rl1nu7a2kjwi3mykjwlbpmk1up4mzl1iuenedor0bdmkjwmpk6rhcg4h3en3pew5";
+        
+        // the 7-character value (e.g., B=0="kjwhcgn", W=1="j2xd6el") were created by 
+        // turning base4 values into base36, so let's turn this back into a string the same way
+        valuesForAttack = parseInt(encodedValues.substr(getIndex(a)*7,7),36).toString(4);
+        
+        // valuesForAttack is indexed by defenseType.  The value will be 0..3, depending on the multiplier
+        
+        // let's get an array of the multipliers and reduce...
+        multiplier = b.split('/').reduce((oldMultiplier,defenseType)=>oldMultiplier * [0,.5,1,2][valuesForAttack[getIndex(defenseType)]],1);
+        
+        return multiplier;
+    }
 });

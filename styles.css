@@ -95,4 +95,13 @@ img.type {
 .matchups-wrapper ul {
     list-style: none;
     font-size: 20px;
+    padding: 50px 0 0 0;
+}
+
+.matchups-wrapper ul li {
+    margin-bottom: 10px;
+}
+
+.matchups-wrapper img.type {
+    margin-right: 20px;
 }

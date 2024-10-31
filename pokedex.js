@@ -16919,7 +16919,6 @@ const pokedex = {
 
 for (var entry in pokedex) {
     if (pokedex.hasOwnProperty(entry)) {
-        //console.log(pokedex[entry].name + ": " + pokedex[entry].types.join("/"));
         $("#dropdownList").append(`<li data-num='${pokedex[entry].num}' data-info='${JSON.stringify(pokedex[entry])}'>${pokedex[entry].name}</li>`)
     }
 }
