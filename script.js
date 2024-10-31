@@ -28,18 +28,60 @@ $(document).ready(function () {
         console.log(elem)
         $("#pokemon-data").removeClass("d-none");
         let imgUrl = "";
-        if (elem[0].innerHTML.includes("-Mega") || elem[0].innerHTML.includes("-Primal")) {
-            let dexName = elem[0].innerHTML.toLowerCase();
-            imgUrl = `https://img.pokemondb.net/artwork/${dexName}.jpg`;
-        } else if (elem[0].innerHTML.includes("-Alola")) {
-            let dexName = elem[0].innerHTML.toLowerCase();
-            imgUrl = `https://img.pokemondb.net/artwork/${dexName}n.jpg`;
+
+        console.log(elem[0].innerHTML.toLowerCase())
+        let pokemonName = elem[0].innerHTML.toLowerCase();
+        pokemonName = pokemonName.replace(/’+/g,'');
+        console.log(pokemonName)
+
+        // Image edge cases go here
+        if (
+            elem[0].innerHTML.includes("-Mega") 
+            || elem[0].innerHTML.includes("-Primal") 
+            || elem[0].innerHTML.includes("-Therian") 
+            || elem[0].innerHTML.includes("Deoxys-")
+            || elem[0].innerHTML.includes("Meloetta-")
+            || elem[0].innerHTML.includes("Shaymin-")
+            || elem[0].innerHTML.includes("Kyurem-")
+            || elem[0].innerHTML.includes("Keldeo-")
+        ) {
+            let dexName = pokemonName;
+            imgUrl = `https://img.pokemondb.net/artwork/large/${dexName}.jpg`;
+        } else if (
+            elem[0].innerHTML.includes("Castform-")
+            || elem[0].innerHTML.includes("Cherrim-")
+            || elem[0].innerHTML.includes("Wormadam-")
+            || elem[0].innerHTML.includes("Rotom-")
+        ) {
+            let dexName = pokemonName;
+            imgUrl = `https://img.pokemondb.net/artwork/vector/${dexName}.png`;
+        } else if (elem[0].innerHTML.includes("-Origin")) {
+            let dexName = pokemonName;
+            imgUrl = `https://img.pokemondb.net/artwork/avif/${dexName}.avif`;
+        } else if (elem[0].innerHTML == "Floette-Eternal") {
+            imgUrl = `https://assets.pokeos.com/pokemon/home/render/670-eternal.png`;
+        } else if (elem[0].innerHTML == "Darmanitan-Zen") {
+            imgUrl = `https://img.pokemondb.net/artwork/large/darmanitan-zen.jpg`;
+        } else if (elem[0].innerHTML == "Darmanitan-Galar-Zen") {
+            imgUrl = `https://img.pokemondb.net/artwork/large/darmanitan-galarian-zen.jpg`;
+        } else if (
+            elem[0].innerHTML.includes("-Alola") 
+            || elem[0].innerHTML.includes("-Paldea")
+        ) {
+            if (elem[0].innerHTML.includes("Tauros")) {
+                let dexName = elem[0].innerHTML.split("-");
+                dexName = (dexName[0] + "-paldean-" + dexName[2]).toLowerCase();
+                imgUrl = `https://img.pokemondb.net/artwork/${dexName}.jpg`;
+            } else {
+                let dexName = pokemonName;
+                imgUrl = `https://img.pokemondb.net/artwork/${dexName}n.jpg`;
+            }
         } else if (elem[0].innerHTML.includes("-Hisui")) {
-            let dexName = elem[0].innerHTML.toLowerCase();
-            imgUrl = `https://img.pokemondb.net/artwork/${dexName}an.jpg`;
+            let dexName = pokemonName;
+            imgUrl = `https://img.pokemondb.net/artwork/large/${dexName}an.jpg`;
         } else if (elem[0].innerHTML.includes("-Galar")) {
-            let dexName = elem[0].innerHTML.toLowerCase();
-            imgUrl = `https://img.pokemondb.net/artwork/${dexName}ian.jpg`;
+            let dexName = pokemonName;
+            imgUrl = `https://img.pokemondb.net/artwork/large/${dexName}ian.jpg`;
         } else {
             let dexNum = elem[0].dataset.num
             if (dexNum.toString().length < 3) {
@@ -48,6 +90,7 @@ $(document).ready(function () {
             imgUrl = `https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/detail/${dexNum}.png`;
         }
         $("#pokemon-data .img-wrapper img").attr("src", imgUrl);
+        // End image logic
 
         let data = JSON.parse(elem[0].dataset.info);
         console.log(data);
@@ -116,8 +159,6 @@ $(document).ready(function () {
         }
 
         for (var key in matchups) {
-            console.log(key)
-            console.log(matchups[key])
             let typeHtml = "";
             if (matchups[key].length == 0) {
                 typeHtml = "None"
